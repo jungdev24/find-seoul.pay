@@ -60,6 +60,13 @@
       <p class="notify-status" id="notifyStatus"></p>
     </section>
 
+    <!-- 판매 현황 -->
+    <section class="status-section">
+      <h2 class="section-title">판매 현황</h2>
+      <p class="status-desc">최근 및 예정된 발행일의 매진 여부를 확인하세요. 매진 시 제보해주시면 다른 사용자에게 도움이 됩니다.</p>
+      <div id="statusList" class="status-list"></div>
+    </section>
+
     <!-- 발행 일정 캘린더 -->
     <section class="schedule-section">
       <div class="schedule-header">
@@ -72,9 +79,10 @@
       </div>
       <div class="calendar" id="calendar"></div>
       <div class="legend">
-        <span class="legend-item"><span class="dot dot-issue"></span> 발행일</span>
+        <span class="legend-item"><span class="dot dot-issue"></span> 발행 예정</span>
+        <span class="legend-item"><span class="dot dot-on-sale"></span> 판매 중</span>
+        <span class="legend-item"><span class="dot dot-sold-out"></span> 매진</span>
         <span class="legend-item"><span class="dot dot-today"></span> 오늘</span>
-        <span class="legend-item"><span class="dot dot-past"></span> 지난 발행일</span>
       </div>
     </section>
 

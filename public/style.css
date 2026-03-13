@@ -154,6 +154,27 @@ section {
   color: #fbbf24;
 }
 
+.next-date .status-badge {
+  margin-right: 6px;
+  font-size: 0.8rem;
+  vertical-align: middle;
+}
+
+.next-date .badge-scheduled {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.next-date .badge-on-sale {
+  background: #22c55e;
+  color: white;
+}
+
+.next-date .badge-sold-out {
+  background: #ef4444;
+  color: white;
+}
+
 /* Notify */
 .notify-section {
   text-align: center;
@@ -351,8 +372,142 @@ section {
   border: 2px solid var(--primary);
 }
 
-.dot-past {
-  background: var(--text-muted);
+.dot-on-sale {
+  background: #16a34a;
+}
+
+.dot-sold-out {
+  background: var(--accent);
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-scheduled {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.badge-on-sale {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.badge-sold-out {
+  background: #ffe4e6;
+  color: #dc2626;
+}
+
+.badge-reported {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+/* Calendar sold out styles */
+.cal-day.issue-day.sold-out {
+  background: var(--accent);
+  animation: none;
+}
+
+.cal-day.issue-day.reported-sold-out {
+  background: #d97706;
+  animation: none;
+}
+
+.cal-day.issue-day.on-sale {
+  background: #16a34a;
+}
+
+/* Status List Section */
+.status-section {
+  border-left: 4px solid var(--accent);
+}
+
+.status-desc {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--bg);
+  border-radius: 8px;
+  gap: 10px;
+}
+
+.status-row.past-row {
+  opacity: 0.55;
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.status-date {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.status-round {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.status-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-report {
+  background: none;
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-report:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.reported-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.no-data {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 20px;
+  font-size: 0.9rem;
 }
 
 /* Info Cards */
@@ -463,5 +618,16 @@ section {
   .schedule-header {
     flex-direction: column;
     gap: 12px;
+  }
+
+  .status-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .status-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 }
