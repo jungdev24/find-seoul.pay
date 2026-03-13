@@ -40,26 +40,31 @@ let cachedData = {
 // ========================================
 // 스크래핑 함수들
 // ========================================
-async function fetchWithRetry(url, retries = 2) {
-  for (let i = 0; i <= retries; i++) {
-    try {
-      const res = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-          'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
-        },
-        timeout: 10000,
-      });
-      if (res.ok) {
-        return await res.text();
-      }
-      console.log(`[${url}] HTTP ${res.status}`);
-    } catch (err) {
-      console.log(`[${url}] 요청 실패 (${i + 1}/${retries + 1}): ${err.message}`);
+async function fetchWithTimeout(url, timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
+      },
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+    if (res.ok) {
+      return await res.text();
     }
+    console.log(`  [${url}] HTTP ${res.status}`);
+    return null;
+  } catch (err) {
+    clearTimeout(timer);
+    const msg = err.name === 'AbortError' ? '타임아웃' : err.message;
+    console.log(`  [${url}] ${msg}`);
+    return null;
   }
-  return null;
 }
 
 function parseSeoulNews(html) {
@@ -114,7 +119,7 @@ async function fetchSeoulRSS() {
   const announcements = [];
 
   for (const url of rssUrls) {
-    const html = await fetchWithRetry(url);
+    const html = await fetchWithTimeout(url);
     if (!html) continue;
 
     const $ = cheerio.load(html, { xmlMode: true });
@@ -158,7 +163,7 @@ async function scrapeAll() {
   // 각 소스 스크래핑
   for (const source of SCRAPE_SOURCES) {
     try {
-      const html = await fetchWithRetry(source.url);
+      const html = await fetchWithTimeout(source.url);
       if (html) {
         const parsed = source.parser(html);
         results.announcements.push(...parsed);
