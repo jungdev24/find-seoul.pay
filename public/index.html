@@ -62,9 +62,23 @@
 
     <!-- 판매 현황 -->
     <section class="status-section">
-      <h2 class="section-title">판매 현황</h2>
-      <p class="status-desc">최근 및 예정된 발행일의 매진 여부를 확인하세요. 매진 시 제보해주시면 다른 사용자에게 도움이 됩니다.</p>
+      <h2 class="section-title">발행/매진 현황</h2>
       <div id="statusList" class="status-list"></div>
+    </section>
+
+    <!-- 서울시 공지사항 (자동 크롤링) -->
+    <section class="announcement-section">
+      <div class="announcement-header">
+        <h2 class="section-title">서울시 공지사항</h2>
+        <div class="refresh-area">
+          <button class="btn-refresh" id="btnRefresh">새로고침</button>
+          <span class="refresh-status" id="refreshStatus"></span>
+        </div>
+      </div>
+      <p class="announcement-desc">서버가 서울시 공지사항을 자동으로 확인합니다 (30분 간격)</p>
+      <div id="announcementList" class="announcement-list">
+        <p class="no-data">로딩 중...</p>
+      </div>
     </section>
 
     <!-- 발행 일정 캘린더 -->
@@ -93,7 +107,7 @@
         <div class="info-card">
           <div class="info-icon">&#x1F4B3;</div>
           <h3>할인 혜택</h3>
-          <p>광역 상품권은 <strong>10% 할인</strong>된 가격으로 구매할 수 있습니다. (10만원 → 9만원)</p>
+          <p>광역 상품권은 <strong>5% 할인</strong>된 가격으로 구매할 수 있습니다. (10만원 &rarr; 9.5만원)</p>
         </div>
         <div class="info-card">
           <div class="info-icon">&#x1F4F1;</div>
@@ -107,8 +121,8 @@
         </div>
         <div class="info-card">
           <div class="info-icon">&#x1F4B0;</div>
-          <h3>월 구매 한도</h3>
-          <p>1인당 월 최대 <strong>70만원</strong>까지 구매 가능합니다.</p>
+          <h3>구매 한도</h3>
+          <p>광역: 월 <strong>30만원</strong>, 보유 한도 100만원</p>
         </div>
       </div>
     </section>
@@ -121,7 +135,8 @@
         <li>Wi-Fi보다 모바일 데이터가 더 빠를 수 있습니다.</li>
         <li>결제 수단을 미리 등록해두세요.</li>
         <li>자동충전 설정을 활용하면 더 편리합니다.</li>
-        <li>여러 회차에 나눠서 발행되므로, 한 번 놓쳐도 다음 회차를 노려보세요.</li>
+        <li>홀짝 2부제가 적용될 수 있으니, 본인 출생연도를 확인하세요.</li>
+        <li>'찜페이' 기능으로 예약 후 60일 내 결제도 가능합니다.</li>
       </ul>
     </section>
   </main>

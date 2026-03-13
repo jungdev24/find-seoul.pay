@@ -1,8 +1,8 @@
 /**
  * 서울페이+ 광역 발행일 알림 사이트
  *
- * 발행일 데이터는 아래 ISSUE_DATES에서 관리합니다.
- * 서울시 공지사항을 참고하여 매월 업데이트해주세요.
+ * 발행일 데이터는 아래 ISSUE_DATES에서 기본 관리합니다.
+ * 서버가 서울시 공지사항을 자동 크롤링하여 최신 정보를 가져옵니다.
  *
  * status 값:
  *   'scheduled' - 발행 예정
@@ -11,54 +11,18 @@
  */
 
 // ========================================
-// 발행일 데이터 (수동 관리)
-// 서울시 공지 기반으로 업데이트 필요
+// 발행일 데이터 (기본값, 서버 데이터로 보완)
+// 실제 일정은 서울시 공지 기준이며,
+// 아래는 확인된 일정 + 예상 일정입니다.
 // ========================================
 const ISSUE_DATES = [
-  // 2026년 1월
-  { date: '2026-01-15', round: '1월 1회차', time: '10:00', status: 'sold_out' },
-  { date: '2026-01-22', round: '1월 2회차', time: '10:00', status: 'sold_out' },
-  // 2026년 2월
-  { date: '2026-02-12', round: '2월 1회차', time: '10:00', status: 'sold_out' },
-  { date: '2026-02-26', round: '2월 2회차', time: '10:00', status: 'sold_out' },
-  // 2026년 3월
-  { date: '2026-03-13', round: '3월 1회차', time: '10:00', status: 'on_sale' },
-  { date: '2026-03-20', round: '3월 2회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-03-27', round: '3월 3회차', time: '10:00', status: 'scheduled' },
-  // 2026년 4월
-  { date: '2026-04-10', round: '4월 1회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-04-17', round: '4월 2회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-04-24', round: '4월 3회차', time: '10:00', status: 'scheduled' },
-  // 2026년 5월
-  { date: '2026-05-14', round: '5월 1회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-05-21', round: '5월 2회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-05-28', round: '5월 3회차', time: '10:00', status: 'scheduled' },
-  // 2026년 6월
-  { date: '2026-06-11', round: '6월 1회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-06-18', round: '6월 2회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-06-25', round: '6월 3회차', time: '10:00', status: 'scheduled' },
-  // 2026년 7월
-  { date: '2026-07-09', round: '7월 1회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-07-16', round: '7월 2회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-07-23', round: '7월 3회차', time: '10:00', status: 'scheduled' },
-  // 2026년 8월
-  { date: '2026-08-13', round: '8월 1회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-08-20', round: '8월 2회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-08-27', round: '8월 3회차', time: '10:00', status: 'scheduled' },
-  // 2026년 9월
-  { date: '2026-09-10', round: '9월 1회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-09-17', round: '9월 2회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-09-24', round: '9월 3회차', time: '10:00', status: 'scheduled' },
-  // 2026년 10월
-  { date: '2026-10-15', round: '10월 1회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-10-22', round: '10월 2회차', time: '10:00', status: 'scheduled' },
-  // 2026년 11월
-  { date: '2026-11-12', round: '11월 1회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-11-19', round: '11월 2회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-11-26', round: '11월 3회차', time: '10:00', status: 'scheduled' },
-  // 2026년 12월
-  { date: '2026-12-10', round: '12월 1회차', time: '10:00', status: 'scheduled' },
-  { date: '2026-12-17', round: '12월 2회차', time: '10:00', status: 'scheduled' },
+  // 2026년 2월 (확인된 일정)
+  { date: '2026-02-11', round: '2월 광역 1차', time: '10:00', status: 'sold_out',
+    note: '1,000억원 규모, 홀짝 2부제 적용' },
+  // 이후 일정은 서울시 공지 확인 필요 (아래는 예상)
+  { date: '2026-05-13', round: '5월 광역 (예상)', time: '10:00', status: 'scheduled' },
+  { date: '2026-08-12', round: '8월 광역 (예상)', time: '10:00', status: 'scheduled' },
+  { date: '2026-11-11', round: '11월 광역 (예상)', time: '10:00', status: 'scheduled' },
 ];
 
 // 상태 표시 텍스트/색상 매핑
@@ -80,13 +44,6 @@ let currentMonthIndex;
 function parseDate(dateStr) {
   const [y, m, d] = dateStr.split('-').map(Number);
   return new Date(y, m - 1, d);
-}
-
-function toDateStr(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
 }
 
 function isSameDay(d1, d2) {
@@ -114,62 +71,78 @@ function getIssueDatesForMonth(year, month) {
 }
 
 // ========================================
-// 매진 제보 (localStorage 기반)
+// 서버 API 연동
 // ========================================
-function getReports() {
+async function fetchAnnouncements() {
   try {
-    return JSON.parse(localStorage.getItem('soldOutReports') || '{}');
+    const res = await fetch('/api/announcements');
+    if (!res.ok) return null;
+    return await res.json();
   } catch {
-    return {};
+    return null;
   }
 }
 
-function saveReport(dateStr) {
-  const reports = getReports();
-  if (!reports[dateStr]) {
-    reports[dateStr] = { count: 0, lastReported: null };
+async function refreshFromServer() {
+  const btn = document.getElementById('btnRefresh');
+  const statusEl = document.getElementById('refreshStatus');
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '확인 중...';
   }
-  reports[dateStr].count++;
-  reports[dateStr].lastReported = new Date().toISOString();
-  localStorage.setItem('soldOutReports', JSON.stringify(reports));
-}
 
-function getReportCount(dateStr) {
-  const reports = getReports();
-  return reports[dateStr]?.count || 0;
-}
-
-function hasUserReported(dateStr) {
   try {
-    const reported = JSON.parse(localStorage.getItem('userReported') || '[]');
-    return reported.includes(dateStr);
-  } catch {
-    return false;
-  }
-}
+    const res = await fetch('/api/refresh');
+    if (!res.ok) throw new Error('서버 응답 오류');
+    const data = await res.json();
 
-function markUserReported(dateStr) {
-  try {
-    const reported = JSON.parse(localStorage.getItem('userReported') || '[]');
-    if (!reported.includes(dateStr)) {
-      reported.push(dateStr);
-      localStorage.setItem('userReported', JSON.stringify(reported));
+    renderAnnouncements(data);
+
+    if (statusEl) {
+      const time = new Date(data.lastUpdated).toLocaleTimeString('ko-KR');
+      statusEl.textContent = `마지막 확인: ${time}`;
     }
-  } catch {
-    localStorage.setItem('userReported', JSON.stringify([dateStr]));
+  } catch (err) {
+    if (statusEl) {
+      statusEl.textContent = '서버 연결 실패 - 기본 데이터를 사용합니다';
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '새로고침';
+    }
   }
 }
 
-// 실제 상태 결정 (데이터 status + 사용자 제보)
-function getEffectiveStatus(item) {
-  // 데이터에 명시된 상태가 sold_out이면 그대로
-  if (item.status === 'sold_out') return 'sold_out';
+function renderAnnouncements(data) {
+  const container = document.getElementById('announcementList');
+  if (!container) return;
 
-  // 사용자 제보가 3건 이상이면 매진 가능성 표시
-  const reportCount = getReportCount(item.date);
-  if (reportCount >= 3) return 'reported_sold_out';
+  if (!data || !data.announcements || data.announcements.length === 0) {
+    const errorMsg = data?.errors?.length
+      ? '서울시 공지 접근이 차단되어 자동 확인이 불가합니다.'
+      : '새로운 공지사항이 없습니다.';
 
-  return item.status;
+    container.innerHTML = `
+      <div class="no-data">
+        <p>${errorMsg}</p>
+        <p class="fallback-links">
+          직접 확인:
+          <a href="https://news.seoul.go.kr/economy/archives/category/small-business-digital-economy-news_c1/seoul-love-giftcard_c1/sales-schedule" target="_blank" rel="noopener">서울시 경제정책</a> |
+          <a href="https://www.seoulsarang.kr" target="_blank" rel="noopener">서울사랑상품권</a>
+        </p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = data.announcements.map(a => `
+    <a href="${a.link}" target="_blank" rel="noopener" class="announcement-item">
+      <span class="announcement-source">${a.source}</span>
+      <span class="announcement-title">${a.title}</span>
+      ${a.date ? `<span class="announcement-date">${new Date(a.date).toLocaleDateString('ko-KR')}</span>` : ''}
+    </a>
+  `).join('');
 }
 
 // ========================================
@@ -188,7 +161,7 @@ function updateCountdown() {
     hoursEl.textContent = '--';
     minutesEl.textContent = '--';
     secondsEl.textContent = '--';
-    infoEl.innerHTML = '예정된 발행일이 없습니다. 데이터를 업데이트해주세요.';
+    infoEl.innerHTML = '확인된 발행 일정이 없습니다. 서울시 공지를 확인해주세요.';
     return;
   }
 
@@ -251,14 +224,12 @@ function renderCalendar(year, month) {
   const today = new Date();
   const issueDates = getIssueDatesForMonth(year, month);
 
-  // 빈 칸
   for (let i = 0; i < firstDay; i++) {
     const el = document.createElement('div');
     el.className = 'cal-day empty';
     cal.appendChild(el);
   }
 
-  // 날짜
   for (let d = 1; d <= daysInMonth; d++) {
     const el = document.createElement('div');
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
@@ -266,23 +237,15 @@ function renderCalendar(year, month) {
     const dayOfWeek = currentDate.getDay();
 
     let classes = ['cal-day'];
-
     if (dayOfWeek === 0) classes.push('sunday');
-
-    if (isSameDay(currentDate, today)) {
-      classes.push('today');
-    }
+    if (isSameDay(currentDate, today)) classes.push('today');
 
     const issueMatch = issueDates.find(item => item.date === dateStr);
     if (issueMatch) {
-      const effectiveStatus = getEffectiveStatus(issueMatch);
       classes.push('issue-day');
-
-      if (effectiveStatus === 'sold_out') {
+      if (issueMatch.status === 'sold_out') {
         classes.push('sold-out');
-      } else if (effectiveStatus === 'reported_sold_out') {
-        classes.push('reported-sold-out');
-      } else if (effectiveStatus === 'on_sale') {
+      } else if (issueMatch.status === 'on_sale') {
         classes.push('on-sale');
       } else if (currentDate < today && !isSameDay(currentDate, today)) {
         classes.push('past');
@@ -292,16 +255,14 @@ function renderCalendar(year, month) {
     el.className = classes.join(' ');
 
     if (issueMatch) {
-      const effectiveStatus = getEffectiveStatus(issueMatch);
-      let label = issueMatch.round.split(' ')[1] || '발행';
-      if (effectiveStatus === 'sold_out') label = '매진';
-      else if (effectiveStatus === 'reported_sold_out') label = '매진?';
-      else if (effectiveStatus === 'on_sale') label = '판매중';
+      let label = '발행';
+      if (issueMatch.status === 'sold_out') label = '매진';
+      else if (issueMatch.status === 'on_sale') label = '판매중';
 
       el.innerHTML = `${d}<span class="issue-label">${label}</span>`;
 
       const statusText = STATUS_MAP[issueMatch.status]?.text || '예정';
-      el.title = `${issueMatch.round} - ${issueMatch.time} 발행 (${statusText})`;
+      el.title = `${issueMatch.round} - ${issueMatch.time} (${statusText})${issueMatch.note ? '\n' + issueMatch.note : ''}`;
     } else {
       el.textContent = d;
     }
@@ -317,67 +278,40 @@ function renderStatusList() {
   const container = document.getElementById('statusList');
   if (!container) return;
 
-  const now = new Date();
-  const relevantDates = ISSUE_DATES.filter(item => {
-    const d = parseDate(item.date);
-    const diffDays = (d - now) / (1000 * 60 * 60 * 24);
-    return diffDays >= -7 && diffDays <= 30;
-  });
-
-  if (relevantDates.length === 0) {
-    container.innerHTML = '<p class="no-data">표시할 일정이 없습니다.</p>';
+  if (ISSUE_DATES.length === 0) {
+    container.innerHTML = '<p class="no-data">등록된 일정이 없습니다.</p>';
     return;
   }
 
-  container.innerHTML = relevantDates.map(item => {
+  container.innerHTML = ISSUE_DATES.map(item => {
     const d = parseDate(item.date);
+    const now = new Date();
     const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
     const dateText = `${d.getMonth() + 1}/${d.getDate()} (${dayNames[d.getDay()]})`;
-    const effectiveStatus = getEffectiveStatus(item);
-    const reportCount = getReportCount(item.date);
-    const alreadyReported = hasUserReported(item.date);
     const isPast = d < now && !isSameDay(d, now);
 
     let statusHtml;
-    if (effectiveStatus === 'sold_out') {
+    if (item.status === 'sold_out') {
       statusHtml = '<span class="status-badge badge-sold-out">매진</span>';
-    } else if (effectiveStatus === 'reported_sold_out') {
-      statusHtml = `<span class="status-badge badge-reported">매진 추정 (${reportCount}건 제보)</span>`;
-    } else if (effectiveStatus === 'on_sale') {
+    } else if (item.status === 'on_sale') {
       statusHtml = '<span class="status-badge badge-on-sale">판매 중</span>';
     } else {
       statusHtml = '<span class="status-badge badge-scheduled">발행 예정</span>';
     }
-
-    const canReport = !isPast && item.status !== 'sold_out' && !alreadyReported;
-    const reportBtn = canReport
-      ? `<button class="btn-report" data-date="${item.date}" title="매진 제보하기">매진 제보</button>`
-      : (alreadyReported && item.status !== 'sold_out' ? '<span class="reported-text">제보 완료</span>' : '');
 
     return `
       <div class="status-row ${isPast ? 'past-row' : ''}">
         <div class="status-info">
           <span class="status-date">${dateText}</span>
           <span class="status-round">${item.round} ${item.time}</span>
+          ${item.note ? `<span class="status-note">${item.note}</span>` : ''}
         </div>
         <div class="status-actions">
           ${statusHtml}
-          ${reportBtn}
         </div>
       </div>
     `;
   }).join('');
-
-  // 제보 버튼 이벤트
-  container.querySelectorAll('.btn-report').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const dateStr = btn.dataset.date;
-      saveReport(dateStr);
-      markUserReported(dateStr);
-      renderStatusList();
-      renderCalendar(currentYear, currentMonthIndex);
-    });
-  });
 }
 
 // ========================================
@@ -420,8 +354,7 @@ function setupNotification() {
     updateButton();
     if (result === 'granted') {
       new Notification('서울페이+ 알림 설정 완료', {
-        body: '발행일 알림을 받을 준비가 되었습니다!',
-        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">💳</text></svg>'
+        body: '발행일 알림을 받을 준비가 되었습니다!'
       });
     }
   });
@@ -443,8 +376,7 @@ function scheduleNotifications() {
   if (delay > 0 && delay < 7 * 24 * 60 * 60 * 1000) {
     setTimeout(() => {
       new Notification('서울페이+ 발행일 알림', {
-        body: `내일 ${next.time}에 ${next.round} 발행이 시작됩니다!`,
-        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">🔔</text></svg>'
+        body: `내일 ${next.time}에 ${next.round} 발행이 시작됩니다!`
       });
     }, delay);
   }
@@ -453,7 +385,7 @@ function scheduleNotifications() {
 // ========================================
 // 초기화
 // ========================================
-function init() {
+async function init() {
   const today = new Date();
   currentYear = today.getFullYear();
   currentMonthIndex = today.getMonth();
@@ -487,8 +419,25 @@ function init() {
   // 판매 현황 렌더링
   renderStatusList();
 
+  // 새로고침 버튼
+  const btnRefresh = document.getElementById('btnRefresh');
+  if (btnRefresh) {
+    btnRefresh.addEventListener('click', refreshFromServer);
+  }
+
   // 알림 설정
   setupNotification();
+
+  // 서버에서 최신 공지사항 가져오기
+  const data = await fetchAnnouncements();
+  if (data) {
+    renderAnnouncements(data);
+    const statusEl = document.getElementById('refreshStatus');
+    if (statusEl && data.lastUpdated) {
+      const time = new Date(data.lastUpdated).toLocaleTimeString('ko-KR');
+      statusEl.textContent = `마지막 확인: ${time}`;
+    }
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);

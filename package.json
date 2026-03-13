@@ -3,9 +3,19 @@
   "version": "1.0.0",
   "description": "서울페이 광역 발행일 알림 사이트",
   "scripts": {
-    "start": "npx serve public",
-    "dev": "npx serve public"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
-  "keywords": ["서울페이", "서울사랑상품권", "발행일", "알림"],
-  "license": "MIT"
+  "keywords": [
+    "서울페이",
+    "서울사랑상품권",
+    "발행일",
+    "알림"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "express": "^5.2.1",
+    "node-fetch": "^2.7.0"
+  }
 }

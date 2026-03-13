@@ -405,19 +405,9 @@ section {
   color: #dc2626;
 }
 
-.badge-reported {
-  background: #fef3c7;
-  color: #d97706;
-}
-
 /* Calendar sold out styles */
 .cal-day.issue-day.sold-out {
   background: var(--accent);
-  animation: none;
-}
-
-.cal-day.issue-day.reported-sold-out {
-  background: #d97706;
   animation: none;
 }
 
@@ -480,27 +470,10 @@ section {
   flex-shrink: 0;
 }
 
-.btn-report {
-  background: none;
-  border: 1.5px solid var(--accent);
-  color: var(--accent);
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.btn-report:hover {
-  background: var(--accent);
-  color: white;
-}
-
-.reported-text {
-  font-size: 0.75rem;
-  color: var(--text-muted);
+.status-note {
+  font-size: 0.7rem;
+  color: var(--primary);
+  font-style: italic;
 }
 
 .no-data {
@@ -508,6 +481,122 @@ section {
   color: var(--text-muted);
   padding: 20px;
   font-size: 0.9rem;
+}
+
+.fallback-links {
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+
+.fallback-links a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.fallback-links a:hover {
+  text-decoration: underline;
+}
+
+/* Announcement Section */
+.announcement-section {
+  border-left: 4px solid var(--primary);
+}
+
+.announcement-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.announcement-header .section-title {
+  margin-bottom: 0;
+}
+
+.announcement-desc {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 14px;
+}
+
+.refresh-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-refresh {
+  background: var(--primary-light);
+  border: none;
+  color: var(--primary);
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-refresh:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-refresh:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.refresh-status {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.announcement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.announcement-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+  transition: background 0.2s;
+}
+
+.announcement-item:hover {
+  background: var(--primary-light);
+}
+
+.announcement-source {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: white;
+  background: var(--primary);
+  padding: 2px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.announcement-title {
+  font-size: 0.85rem;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.announcement-date {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 /* Info Cards */
@@ -629,5 +718,15 @@ section {
   .status-actions {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .announcement-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .announcement-item {
+    flex-wrap: wrap;
   }
 }
