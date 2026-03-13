@@ -1,0 +1,11 @@
+{
+  "name": "find-seoul-pay",
+  "version": "1.0.0",
+  "description": "서울페이 광역 발행일 알림 사이트",
+  "scripts": {
+    "start": "npx serve public",
+    "dev": "npx serve public"
+  },
+  "keywords": ["서울페이", "서울사랑상품권", "발행일", "알림"],
+  "license": "MIT"
+}
